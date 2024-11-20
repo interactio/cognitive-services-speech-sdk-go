@@ -29,7 +29,7 @@ func NewTranslationResultFromHandle(handle common.SPXHandle) (*TranslationResult
 	result := new(TranslationResult)
 	result.handle = uintptr2handle(handle)
 	var size C.size_t
-	ret := uintptr(C.translation_synthesis_result_get_audio_data(result.handle, (*C.uint8_t)(nil), &size))
+	ret := uintptr(C.translation_synthesis_result_get_audio_data(result.handle, nil, &size))
 	if ret != C.SPX_NOERROR {
 		if ret == C.SPXERR_BUFFER_TOO_SMALL {
 			buffer := C.malloc(C.sizeof_char * size)

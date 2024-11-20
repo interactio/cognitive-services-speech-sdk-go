@@ -13,7 +13,6 @@ type TranslationSynthesisEventArgs struct {
 	Result TranslationResult
 }
 
-// Close releases the underlying resources
 func (event TranslationSynthesisEventArgs) Close() {
 	event.Result.Close()
 	C.recognizer_event_handle_release(event.handle)

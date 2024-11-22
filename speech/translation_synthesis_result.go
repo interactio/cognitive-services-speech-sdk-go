@@ -13,20 +13,20 @@ import (
 //
 import "C"
 
-type TranslationResult struct {
+type TranslationSynthesisResult struct {
 	handle    C.SPXHANDLE
 	AudioData []byte
 }
 
-func (result *TranslationResult) Close() {
+func (result *TranslationSynthesisResult) Close() {
 	if result.handle != C.SPXHANDLE_INVALID {
 		C.recognizer_result_handle_release(result.handle)
 		result.handle = C.SPXHANDLE_INVALID
 	}
 }
 
-func NewTranslationResultFromHandle(handle common.SPXHandle) (*TranslationResult, error) {
-	result := new(TranslationResult)
+func NewTranslationSynthesisResultFromHandle(handle common.SPXHandle) (*TranslationSynthesisResult, error) {
+	result := new(TranslationSynthesisResult)
 	result.handle = uintptr2handle(handle)
 	var size C.size_t
 	ret := uintptr(C.translation_synthesis_result_get_audio_data(result.handle, nil, &size))

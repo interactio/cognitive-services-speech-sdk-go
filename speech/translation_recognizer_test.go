@@ -33,11 +33,11 @@ func TestStartContinuousRecognitionAsync(t *testing.T) {
 	if err != nil {
 		t.Error("Got an error ", err.Error())
 	}
-	err = config.AddTargetLanguage("en")
+	err = config.AddTargetLanguage("lt")
 	if err != nil {
 		t.Error("Got an error ", err.Error())
 	}
-	err = config.SetTranslationVoiceName("en-US-AndrewMultilingualNeural")
+	err = config.SetTranslationVoiceLanguage("lt-LT")
 	if err != nil {
 		t.Error("Got an error ", err.Error())
 	}
@@ -56,12 +56,12 @@ func TestStartContinuousRecognitionAsync(t *testing.T) {
 	recognizedHandler := func(event SpeechRecognitionEventArgs) {
 		defer event.Close()
 		firstResult = true
-		t.Log("Recognized: ", event.Result.Text)
+		t.Log("Recognized: ", event.Result.Text, event.Result.Translation)
 		recognizedFuture <- "Recognized"
 	}
 	recognizingHandle := func(event SpeechRecognitionEventArgs) {
 		defer event.Close()
-		t.Log("Recognizing: ", event.Result.Text)
+		t.Log("Recognizing: ", event.Result.Text, event.Result.Translation)
 		if firstResult {
 			firstResult = false
 			recognizingFuture <- "Recognizing"

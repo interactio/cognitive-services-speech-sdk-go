@@ -10,7 +10,7 @@ import "C"
 
 type TranslationSynthesisEventArgs struct {
 	handle C.SPXHANDLE
-	Result TranslationResult
+	Result TranslationSynthesisResult
 }
 
 func (event TranslationSynthesisEventArgs) Close() {
@@ -26,7 +26,7 @@ func NewTranslationSynthesisEventArgsFromHandle(handle common.SPXHandle) (*Trans
 	if ret != C.SPX_NOERROR {
 		return nil, common.NewCarbonError(ret)
 	}
-	result, err := NewTranslationResultFromHandle(handle2uintptr(resultHandle))
+	result, err := NewTranslationSynthesisResultFromHandle(handle2uintptr(resultHandle))
 	if err != nil {
 		return nil, err
 	}

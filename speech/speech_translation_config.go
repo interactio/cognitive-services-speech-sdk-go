@@ -90,8 +90,8 @@ func (config *SpeechTranslationConfig) SpeechRecognitionLanguage() string {
 	return config.GetProperty(common.SpeechServiceConnectionRecoLanguage)
 }
 
-func (config *SpeechTranslationConfig) SetTranslationVoiceName(voiceName string) error {
-	return config.SetProperty(common.SpeechServiceConnectionTranslationVoice, voiceName)
+func (config *SpeechTranslationConfig) SetTranslationVoiceLanguage(language string) error {
+	return config.SetProperty(common.SpeechServiceConnectionTranslationVoice, voices[language])
 }
 
 func (config *SpeechTranslationConfig) TranslationVoiceName() string {

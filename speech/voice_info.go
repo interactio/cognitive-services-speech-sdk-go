@@ -17,6 +17,11 @@ import (
 //
 import "C"
 
+var voices = map[string]string{
+	"en-US": "en-US-AvaMultilingualNeural",
+	"lt-LT": "lt-LT-OnaNeural",
+}
+
 // VoiceInfo contains information about result from voices list of speech synthesizers.
 type VoiceInfo struct {
 	handle C.SPXHANDLE

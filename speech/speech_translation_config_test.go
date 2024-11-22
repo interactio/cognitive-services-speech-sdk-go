@@ -73,12 +73,12 @@ func TestSetTranslationVoiceName(t *testing.T) {
 	if err != nil {
 		t.Error("Unexpected error")
 	}
-	voiceName := "voiceName"
-	err = config.SetTranslationVoiceName(voiceName)
+	language := "en-US"
+	err = config.SetTranslationVoiceLanguage(language)
 	if err != nil {
 		t.Error("Unexpected error")
 	}
-	if config.TranslationVoiceName() != voiceName {
+	if config.TranslationVoiceName() != voices[language] {
 		t.Error("Property value not valid")
 	}
 }

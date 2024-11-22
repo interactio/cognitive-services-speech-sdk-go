@@ -15,6 +15,7 @@ import (
 // #include <speechapi_c_common.h>
 // #include <speechapi_c_result.h>
 // #include <speechapi_c_recognizer.h>
+// #include <speechapi_c_translation_result.h>
 //
 import "C"
 
@@ -30,6 +31,9 @@ type SpeechRecognitionResult struct {
 
 	// Text presents the recognized text in the result.
 	Text string
+
+	// Translation presents the translated text in the result.
+	Translation string
 
 	// Duration of the recognized speech.
 	Duration time.Duration
@@ -72,6 +76,20 @@ func NewSpeechRecognitionResultFromHandle(handle common.SPXHandle) (*SpeechRecog
 		return nil, common.NewCarbonError(ret)
 	}
 	result.Text = C.GoString((*C.char)(buffer))
+	// Translation
+	var languageSize C.size_t
+	var textSize C.size_t
+	ret = uintptr(C.translation_text_result_get_translation(result.handle, 0, nil, nil, &languageSize, &textSize))
+	if ret != C.SPX_NOERROR {
+		return nil, common.NewCarbonError(ret)
+	}
+	language := C.malloc(C.sizeof_char * languageSize)
+	text := C.malloc(C.sizeof_char * textSize)
+	ret = uintptr(C.translation_text_result_get_translation(result.handle, 0, (*C.char)(language), (*C.char)(text), &languageSize, &textSize))
+	if ret != C.SPX_NOERROR {
+		return nil, common.NewCarbonError(ret)
+	}
+	result.Translation = C.GoString((*C.char)(text))
 	/* Duration */
 	var cDuration C.uint64_t
 	ret = uintptr(C.result_get_duration(result.handle, &cDuration))

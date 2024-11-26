@@ -84,7 +84,9 @@ func NewSpeechRecognitionResultFromHandle(handle common.SPXHandle) (*SpeechRecog
 		return nil, common.NewCarbonError(ret)
 	}
 	language := C.malloc(C.sizeof_char * languageSize)
+	defer C.free(unsafe.Pointer(language))
 	text := C.malloc(C.sizeof_char * textSize)
+	defer C.free(unsafe.Pointer(text))
 	ret = uintptr(C.translation_text_result_get_translation(result.handle, 0, (*C.char)(language), (*C.char)(text), &languageSize, &textSize))
 	if ret != C.SPX_NOERROR {
 		return nil, common.NewCarbonError(ret)

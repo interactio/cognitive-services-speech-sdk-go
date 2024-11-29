@@ -62,7 +62,7 @@ func NewTranslationRecognizerFromConfig(config *SpeechTranslationConfig, audioCo
 	return newTranslationRecognizerFromHandle(handle)
 }
 
-func NewTranslationRecognizerFomAutoDetectSourceLangConfig(config *SpeechConfig, langConfig *AutoDetectSourceLanguageConfig, audioConfig *audio.AudioConfig) (*TranslationRecognizer, error) {
+func NewTranslationRecognizerFomAutoDetectSourceLangConfig(config *SpeechTranslationConfig, langConfig *AutoDetectSourceLanguageConfig, audioConfig *audio.AudioConfig) (*TranslationRecognizer, error) {
 	var handle C.SPXHANDLE
 	if config == nil {
 		return nil, common.NewCarbonError(uintptr(C.SPXERR_INVALID_ARG))

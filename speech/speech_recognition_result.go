@@ -32,6 +32,9 @@ type SpeechRecognitionResult struct {
 	// Text presents the recognized text in the result.
 	Text string
 
+	// Language presents detected language.
+	Language string
+
 	// Translation presents the translated text in the result.
 	Translation string
 
@@ -91,6 +94,7 @@ func NewSpeechRecognitionResultFromHandle(handle common.SPXHandle) (*SpeechRecog
 	if ret != C.SPX_NOERROR {
 		return nil, common.NewCarbonError(ret)
 	}
+	result.Language = C.GoString((*C.char)(language))
 	result.Translation = C.GoString((*C.char)(text))
 	/* Duration */
 	var cDuration C.uint64_t

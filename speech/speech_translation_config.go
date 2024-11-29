@@ -98,6 +98,10 @@ func (config *SpeechTranslationConfig) TranslationVoiceName() string {
 	return config.GetProperty(common.SpeechServiceConnectionTranslationVoice)
 }
 
+func (config *SpeechTranslationConfig) SetLanguageIDMode(mode string) error {
+	return config.SetProperty(common.SpeechServiceConnectionLanguageIDMode, mode)
+}
+
 func (config *SpeechTranslationConfig) SetProperty(id common.PropertyID, value string) error {
 	return config.properties.SetProperty(id, value)
 }

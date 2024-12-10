@@ -141,6 +141,8 @@ const (
 	// or not.
 	SpeechServiceConnectionEnableAudioLogging PropertyID = 3202
 
+	SpeechServiceConnectionLanguageIDMode PropertyID = 3205
+
 	// SpeechServiceConnectionAutoDetectSourceLanguages is the auto detect source languages.
 	SpeechServiceConnectionAutoDetectSourceLanguages PropertyID = 3300
 
@@ -310,7 +312,7 @@ const (
 	SegmentationSilenceTimeoutMs PropertyID = 9002
 
 	// SegmentationMaximumTimeMs represents the maximum length of a spoken phrase when using the Time segmentation strategy.
-	// As the length of a spoken phrase approaches this value, the SegmentationSilenceTimeoutMs will be reduced until either 
+	// As the length of a spoken phrase approaches this value, the SegmentationSilenceTimeoutMs will be reduced until either
 	// the phrase silence timeout is reached or the phrase reaches the maximum length.
 	SegmentationMaximumTimeMs PropertyID = 9003
 
@@ -323,7 +325,7 @@ const (
 	// - "Semantic": Uses an AI model to determine the end of a spoken phrase based on the phrase's content.
 	//
 	// Additional Notes:
-	// - When using the Time strategy, SegmentationSilenceTimeoutMs can be adjusted to modify the required silence duration for ending a phrase, 
+	// - When using the Time strategy, SegmentationSilenceTimeoutMs can be adjusted to modify the required silence duration for ending a phrase,
 	//   and SegmentationMaximumTimeMs can be adjusted to set the maximum length of a spoken phrase.
 	// - The Semantic strategy does not have any adjustable properties.
 	SegmentationStrategy PropertyID = 9004

@@ -363,6 +363,56 @@ func synthesizerFireEventBookmarkReached(handle C.SPXRECOHANDLE, eventHandle C.S
 	handler(*event)
 }
 
+var translationRecognizingCallbacks = make(map[C.SPXHANDLE]TranslationRecognitionEventHandler)
+
+func registerTranslationRecognizingCallback(handler TranslationRecognitionEventHandler, handle C.SPXHANDLE) {
+	mu.Lock()
+	defer mu.Unlock()
+	translationRecognizingCallbacks[handle] = handler
+}
+
+func getTranslationRecognizingCallback(handle C.SPXHANDLE) TranslationRecognitionEventHandler {
+	mu.Lock()
+	defer mu.Unlock()
+	return translationRecognizingCallbacks[handle]
+}
+
+//export translatorFireEventRecognizing
+func translatorFireEventRecognizing(handle C.SPXRECOHANDLE, eventHandle C.SPXEVENTHANDLE) {
+	handler := getTranslationRecognizingCallback(handle)
+	event, err := NewTranslationRecognitionEventArgsFromHandle(handle2uintptr(eventHandle))
+	if err != nil || handler == nil {
+		C.recognizer_event_handle_release(handle)
+		return
+	}
+	handler(*event)
+}
+
+var translationRecognizedCallbacks = make(map[C.SPXHANDLE]TranslationRecognitionEventHandler)
+
+func registerTranslationRecognizedCallback(handler TranslationRecognitionEventHandler, handle C.SPXHANDLE) {
+	mu.Lock()
+	defer mu.Unlock()
+	translationRecognizedCallbacks[handle] = handler
+}
+
+func getTranslationRecognizedCallback(handle C.SPXHANDLE) TranslationRecognitionEventHandler {
+	mu.Lock()
+	defer mu.Unlock()
+	return translationRecognizedCallbacks[handle]
+}
+
+//export translatorFireEventRecognized
+func translatorFireEventRecognized(handle C.SPXRECOHANDLE, eventHandle C.SPXEVENTHANDLE) {
+	handler := getTranslationRecognizedCallback(handle)
+	event, err := NewTranslationRecognitionEventArgsFromHandle(handle2uintptr(eventHandle))
+	if err != nil || handler == nil {
+		C.recognizer_event_handle_release(handle)
+		return
+	}
+	handler(*event)
+}
+
 var translationSynthesisCallbacks = make(map[C.SPXHANDLE]TranslationSynthesisEventHandler)
 
 func registerTranslationSynthesizingCallback(handler TranslationSynthesisEventHandler, handle C.SPXHANDLE) {

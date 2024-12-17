@@ -105,6 +105,20 @@ package speech
 //     synthesizerFireEventBookmarkReached(handle, event);
 // }
 //
+// extern void translatorFireEventRecognizing(SPXRECOHANDLE handle, SPXEVENTHANDLE event);
+//
+// void cgo_translator_recognizing(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context)
+// {
+//     translatorFireEventRecognizing(handle, event);
+// }
+//
+// extern void translatorFireEventRecognized(SPXRECOHANDLE handle, SPXEVENTHANDLE event);
+//
+// void cgo_translator_recognized(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context)
+// {
+//     translatorFireEventRecognized(handle, event);
+// }
+//
 // extern void translatorFireEventSynthesizing(SPXRECOHANDLE handle, SPXEVENTHANDLE event);
 //
 // void cgo_translator_synthesizing(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context)

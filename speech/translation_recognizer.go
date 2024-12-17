@@ -15,8 +15,8 @@ import (
 // #include <speechapi_c_grammar.h>
 //
 // /* Proxy functions forward declarations */
-// void cgo_recognizer_recognized(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context);
-// void cgo_recognizer_recognizing(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context);
+// void cgo_translator_recognizing(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context);
+// void cgo_translator_recognized(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context);
 // void cgo_recognizer_canceled(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context);
 // void cgo_translator_synthesizing(SPXRECOHANDLE handle, SPXEVENTHANDLE event, void* context);
 //
@@ -126,24 +126,24 @@ func (recognizer TranslationRecognizer) StopContinuousRecognitionAsync() chan er
 	return outcome
 }
 
-func (recognizer TranslationRecognizer) Recognizing(handler SpeechRecognitionEventHandler) {
-	registerRecognizingCallback(handler, recognizer.handle)
+func (recognizer TranslationRecognizer) Recognizing(handler TranslationRecognitionEventHandler) {
+	registerTranslationRecognizingCallback(handler, recognizer.handle)
 	if handler != nil {
 		C.recognizer_recognizing_set_callback(
 			recognizer.handle,
-			(C.PRECOGNITION_CALLBACK_FUNC)(unsafe.Pointer(C.cgo_recognizer_recognizing)),
+			(C.PRECOGNITION_CALLBACK_FUNC)(unsafe.Pointer(C.cgo_translator_recognizing)),
 			nil)
 	} else {
 		C.recognizer_recognizing_set_callback(recognizer.handle, nil, nil)
 	}
 }
 
-func (recognizer TranslationRecognizer) Recognized(handler SpeechRecognitionEventHandler) {
-	registerRecognizedCallback(handler, recognizer.handle)
+func (recognizer TranslationRecognizer) Recognized(handler TranslationRecognitionEventHandler) {
+	registerTranslationRecognizedCallback(handler, recognizer.handle)
 	if handler != nil {
 		C.recognizer_recognized_set_callback(
 			recognizer.handle,
-			(C.PRECOGNITION_CALLBACK_FUNC)(unsafe.Pointer(C.cgo_recognizer_recognized)),
+			(C.PRECOGNITION_CALLBACK_FUNC)(unsafe.Pointer(C.cgo_translator_recognized)),
 			nil)
 	} else {
 		C.recognizer_recognized_set_callback(recognizer.handle, nil, nil)

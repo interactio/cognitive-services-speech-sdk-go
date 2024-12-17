@@ -53,13 +53,13 @@ func TestStartContinuousRecognitionAsync(t *testing.T) {
 	recognizedFuture := make(chan string)
 	recognizingFuture := make(chan string)
 	synthesizingFuture := make(chan string)
-	recognizedHandler := func(event SpeechRecognitionEventArgs) {
+	recognizedHandler := func(event TranslationRecognitionEventArgs) {
 		defer event.Close()
 		firstResult = true
 		t.Log("Recognized: ", event.Result.Text, event.Result.Translation)
 		recognizedFuture <- "Recognized"
 	}
-	recognizingHandle := func(event SpeechRecognitionEventArgs) {
+	recognizingHandle := func(event TranslationRecognitionEventArgs) {
 		defer event.Close()
 		t.Log("Recognizing: ", event.Result.Text, event.Result.Translation)
 		if firstResult {

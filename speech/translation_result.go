@@ -1,6 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-// Licensed under the MIT license. See LICENSE.md file in the project root for full license information.
-
 package speech
 
 import (
@@ -15,43 +12,31 @@ import (
 // #include <speechapi_c_common.h>
 // #include <speechapi_c_result.h>
 // #include <speechapi_c_recognizer.h>
+// #include <speechapi_c_translation_result.h>
 //
 import "C"
 
-// SpeechRecognitionResult contains detailed information about result of a recognition operation.
-type SpeechRecognitionResult struct {
-	handle C.SPXHANDLE
-
-	// ResultID specifies the result identifier.
-	ResultID string
-
-	// Reason specifies status of speech recognition result.
-	Reason common.ResultReason
-
-	// Text presents the recognized text in the result.
-	Text string
-
-	// Duration of the recognized speech.
-	Duration time.Duration
-
-	// Offset of the recognized speech in ticks.
-	Offset time.Duration
-
-	// Collection of additional RecognitionResult properties.
-	Properties *common.PropertyCollection
+type TranslationRecognitionResult struct {
+	handle      C.SPXHANDLE
+	ResultID    string
+	Reason      common.ResultReason
+	Text        string
+	Language    string
+	Translation string
+	Duration    time.Duration
+	Offset      time.Duration
+	Properties  *common.PropertyCollection
 }
 
-// Close releases the underlying resources
-func (result SpeechRecognitionResult) Close() {
+func (result TranslationRecognitionResult) Close() {
 	result.Properties.Close()
 	C.recognizer_result_handle_release(result.handle)
 }
 
-// NewSpeechRecognitionResultFromHandle creates a SpeechRecognitionResult from a handle (for internal use)
-func NewSpeechRecognitionResultFromHandle(handle common.SPXHandle) (*SpeechRecognitionResult, error) {
+func NewTranslationRecognitionResultResultFromHandle(handle common.SPXHandle) (*TranslationRecognitionResult, error) {
 	buffer := C.malloc(C.sizeof_char * 1024)
 	defer C.free(unsafe.Pointer(buffer))
-	result := new(SpeechRecognitionResult)
+	result := new(TranslationRecognitionResult)
 	result.handle = uintptr2handle(handle)
 	/* ResultID */
 	ret := uintptr(C.result_get_result_id(result.handle, (*C.char)(buffer), 1024))
@@ -72,6 +57,23 @@ func NewSpeechRecognitionResultFromHandle(handle common.SPXHandle) (*SpeechRecog
 		return nil, common.NewCarbonError(ret)
 	}
 	result.Text = C.GoString((*C.char)(buffer))
+	// Translation
+	var languageSize C.size_t
+	var textSize C.size_t
+	ret = uintptr(C.translation_text_result_get_translation(result.handle, 0, nil, nil, &languageSize, &textSize))
+	if ret != C.SPX_NOERROR {
+		return nil, common.NewCarbonError(ret)
+	}
+	language := C.malloc(C.sizeof_char * languageSize)
+	defer C.free(unsafe.Pointer(language))
+	text := C.malloc(C.sizeof_char * textSize)
+	defer C.free(unsafe.Pointer(text))
+	ret = uintptr(C.translation_text_result_get_translation(result.handle, 0, (*C.char)(language), (*C.char)(text), &languageSize, &textSize))
+	if ret != C.SPX_NOERROR {
+		return nil, common.NewCarbonError(ret)
+	}
+	result.Language = C.GoString((*C.char)(language))
+	result.Translation = C.GoString((*C.char)(text))
 	/* Duration */
 	var cDuration C.uint64_t
 	ret = uintptr(C.result_get_duration(result.handle, &cDuration))
@@ -94,19 +96,4 @@ func NewSpeechRecognitionResultFromHandle(handle common.SPXHandle) (*SpeechRecog
 	}
 	result.Properties = common.NewPropertyCollectionFromHandle(handle2uintptr(propBagHandle))
 	return result, nil
-}
-
-// SpeechRecognitionOutcome is a wrapper type to be returned by operations returning SpeechRecognitionResult and error
-type SpeechRecognitionOutcome struct {
-	common.OperationOutcome
-
-	// Result is the result of the operation
-	Result *SpeechRecognitionResult
-}
-
-// Close releases the underlying resources
-func (outcome SpeechRecognitionOutcome) Close() {
-	if outcome.Result != nil {
-		outcome.Result.Close()
-	}
 }

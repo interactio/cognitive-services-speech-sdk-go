@@ -82,6 +82,16 @@ func (config *SpeechTranslationConfig) AddTargetLanguage(language string) error 
 	return nil
 }
 
+func (config *SpeechTranslationConfig) SetCustomModelCategoryID(categoryID string) error {
+	c := C.CString(categoryID)
+	defer C.free(unsafe.Pointer(c))
+	ret := uintptr(C.speech_translation_config_set_custom_model_category_id(config.handle, c))
+	if ret != C.SPX_NOERROR {
+		return common.NewCarbonError(ret)
+	}
+	return nil
+}
+
 func (config *SpeechTranslationConfig) SetSpeechRecognitionLanguage(language string) error {
 	return config.SetProperty(common.SpeechServiceConnectionRecoLanguage, language)
 }
@@ -96,10 +106,6 @@ func (config *SpeechTranslationConfig) SetTranslationVoiceLanguage(language stri
 
 func (config *SpeechTranslationConfig) TranslationVoiceName() string {
 	return config.GetProperty(common.SpeechServiceConnectionTranslationVoice)
-}
-
-func (config *SpeechTranslationConfig) SetLanguageIDMode(mode string) error {
-	return config.SetProperty(common.SpeechServiceConnectionLanguageIDMode, mode)
 }
 
 func (config *SpeechTranslationConfig) SetProperty(id common.PropertyID, value string) error {

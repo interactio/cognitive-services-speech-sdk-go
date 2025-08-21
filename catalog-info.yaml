@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cognitive-services-speech-sdk-go
+  annotations:
+    github.com/project-slug: interactio/cognitive-services-speech-sdk-go
+  labels:
+    co-owner: alex.sujatov
+spec:
+  type: backend
+  lifecycle: production
+  owner: user:default/vidas
